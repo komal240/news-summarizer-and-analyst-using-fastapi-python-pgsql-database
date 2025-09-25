@@ -1,12 +1,14 @@
 import psycopg2
 
 # Connect to your database
+
 conn = psycopg2.connect(
-    host="localhost",
-    database="news",
-    user="postgres",
-    password="Komal@123",
-    port="5432"
+    host="ep-billowing-mud-a1n56fta.ap-southeast-1.aws.neon.tech",
+    database="neondb",
+    user="neondb_owner",
+    password="npg_rpPOEJnVi21x",
+    port="5432",
+    sslmode="require"
 )
 
 cur = conn.cursor()
