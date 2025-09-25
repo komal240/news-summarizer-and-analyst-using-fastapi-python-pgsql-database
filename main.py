@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from database import query
 from openai import OpenAI
 import logging
+import traceback
 
 app = FastAPI()
 logging.basicConfig(level=logging.INFO)
@@ -29,14 +30,13 @@ async def home():
 async def get_ingredients(data:newsRequest):
     news = data.news
 
-    # Safe SELECT
 
-    updnews = query("SELECT * FROM summeryandanalys WHERE news = %s", (news,))
+    updnews = query("SELECT * FROM sa WHERE news = %s", (news,))
 
     logger.info(f"Query result: {updnews}")
     if len(updnews) > 0: 
         steps_from_db = updnews[0][2].split("\n")
-        return JSONResponse(content={"message": "Data from DB", "summery": steps_from_db})
+        return JSONResponse(content={"message": "Data from DB", "summary": steps_from_db})
     else:
         try:
             gemini_key = "AIzaSyAdfD6yDtOF6vbmoxVvtHcuG4SVPTMx_fg"
@@ -58,14 +58,14 @@ async def get_ingredients(data:newsRequest):
             summery_analysis = result_text.split("\n")
 
             if not summery_analysis:
-                return {"message": "No ingredients found for this recipe"}
+                return {"message": "No news found for this recipe"}
 
 
             summery_analysis = "\n".join(summery_analysis)
-            query("INSERT INTO summeryandanalys (news, summery_analysis) VALUES (%s, %s)", (news,summery_analysis))
+            query("INSERT INTO sa (news, summery_analysis) VALUES (%s, %s)", (news,summery_analysis))
         
-            return {"message": "Data fetched from Gemini API", "recipe":summery_analysis}
+            return {"message": "Data fetched from Gemini API", "summary":summery_analysis}
 
         except Exception as e:
-            logger.error(str(e))
-            return {"message": "Error fetching data", "error": str(e)}
+         logger.error(traceback.format_exc())
+         return {"message": "Error fetching data", "error": str(e)}

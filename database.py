@@ -1,19 +1,20 @@
 import psycopg2
 
-# Connect to your database
 
-conn = psycopg2.connect(
-    host="ep-billowing-mud-a1n56fta.ap-southeast-1.aws.neon.tech",
+conn=psycopg2.connect(
+    host="ep-snowy-dawn-a1jislxp-pooler.ap-southeast-1.aws.neon.tech",
     database="neondb",
     user="neondb_owner",
-    password="npg_rpPOEJnVi21x",
-    port="5432",
+    password="npg_hvlDiTps72Ve",
     sslmode="require"
 )
 
-cur = conn.cursor()
+cur=conn.cursor()
 
-def query(sql, params=None):
+
+
+
+def query(sql, params):
     """
     Execute SQL query safely.
     
