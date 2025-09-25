@@ -29,10 +29,7 @@ async def home():
 @app.post("/analyze")
 async def get_ingredients(data:newsRequest):
     news = data.news
-
-
     updnews = query("SELECT * FROM sa WHERE news = %s", (news,))
-
     logger.info(f"Query result: {updnews}")
     if len(updnews) > 0: 
         steps_from_db = updnews[0][2].split("\n")
@@ -58,7 +55,7 @@ async def get_ingredients(data:newsRequest):
             summery_analysis = result_text.split("\n")
 
             if not summery_analysis:
-                return {"message": "No news found for this recipe"}
+                return JSONResponse(content={"message": "No news found for this recipe"})
 
 
             summery_analysis = "\n".join(summery_analysis)
@@ -68,4 +65,4 @@ async def get_ingredients(data:newsRequest):
 
         except Exception as e:
          logger.error(traceback.format_exc())
-         return {"message": "Error fetching data", "error": str(e)}
+         return JSONResponse(content={"message": "Error fetching data", "error": str(e)})
